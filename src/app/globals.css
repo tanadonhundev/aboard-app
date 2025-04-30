@@ -1,26 +1,108 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --main-green-500: #243831;
+  --main-green-300: #2b5f44;
+  --main-green-100: #d8e9e4;
+  --main-golden: #c5a365;
+  --base-black: #000000;
+  --base-white: #ffffff;
+  --base-text: #191919;
+  --base-grey-100: #bbc2c0;
+  --base-grey-300: #939494;
+  --base-success: #49a569;
+  --base-error: #f23536;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer utilities {
+  /* Background Colors */
+  .bg-main-green-100 {
+    background-color: var(--main-green-100);
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  .bg-main-green-300 {
+    background-color: var(--main-green-300);
+  }
+  .bg-main-green-500 {
+    background-color: var(--main-green-500);
+  }
+
+  .bg-success {
+    background-color: var(--base-success);
+  }
+
+  /* Text Colors */
+  .text-base-black {
+    color: var(--base-black);
+  }
+  .text-base-white {
+    color: var(--base-white);
+  }
+  .rounded-br {
+    border-radius: 8px;
+    padding: 10px 16px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.signin-button {
+  background-color: var(--base-success);
+  width: 384px;
+  height: 40px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--base-white);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.input-username {
+  background-color: var(--base-white);
+  width: 384;
+  height: 44;
+  border: #dadada;
+  border-radius: 8px;
+  border-width: 1px;
+  padding-top: 10px;
+  padding-right: 14px;
+  padding-bottom: 10px;
+  padding-left: 14px;
+  gap: 8px;
+}
+
+.text-aboard {
+  font-family: Castoro;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 28px;
+  line-height: Font/line-height/base;
+  letter-spacing: 0%;
+  margin-top: 30px;
+}
+
+.text-singin {
+  color: #ffffff;
+  font-family: Inter;
+  font-size: 28px;
+}
+
+@media (max-width: 376px) {
+  .signin-button {
+    width: 343px;
+  }
+  .input-username {
+    width: 343px;
+  }
+}
+
+@media (max-width: 321px) {
+  .signin-button {
+    width: 300px;
+  }
+  .input-username {
+    width: 300px;
+  }
 }
