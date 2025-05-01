@@ -27,6 +27,14 @@
     background-color: var(--main-green-500);
   }
 
+  .bg-base-grey-100 {
+    background-color: var(--base-grey-100);
+  }
+
+  .bg-base-grey-300 {
+    background-color: var(--base-grey-300);
+  }
+
   .bg-success {
     background-color: var(--base-success);
   }
@@ -59,6 +67,21 @@
   cursor: pointer;
 }
 
+.create-button {
+  background-color: var(--base-success);
+  width: 105px;
+  height: 40px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  display: flex;
+  gap: 0.5rem;
+  color: var(--base-white);
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
 .input-username {
   background-color: var(--base-white);
   width: 384;
@@ -73,6 +96,18 @@
   gap: 8px;
 }
 
+.input-Search {
+  width: 535;
+  height: 40;
+  gap: 8px;
+  border-radius: 8px;
+  border-width: 1px;
+  padding-top: 10px;
+  padding-right: 14px;
+  padding-bottom: 10px;
+  padding-left: 14px;
+}
+
 .text-aboard {
   font-family: Castoro;
   font-weight: 400;
@@ -83,10 +118,27 @@
   margin-top: 30px;
 }
 
+.text-nav-aboard {
+  font-family: Castoro;
+  font-weight: 400;
+  font-style: italic;
+  font-size: 20px;
+  line-height: Font/line-height/base;
+  letter-spacing: 0%;
+}
+
 .text-singin {
   color: #ffffff;
   font-family: Inter;
   font-size: 28px;
+}
+
+.text-menu {
+  color: var(--main-green-500);
+  font-family: Inter;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0%;
 }
 
 @media (max-width: 376px) {
