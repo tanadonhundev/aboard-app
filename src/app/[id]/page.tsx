@@ -1,5 +1,10 @@
-import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+"use client";
+
+import SideBar from "@/components/app/SideBar";
+import NavBar from "@/components/app/Navbar";
+import { FaArrowLeft } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 
 const posts = [
@@ -45,65 +50,64 @@ const posts = [
   },
 ];
 
-export default function PostContent() {
+export default function PostPage() {
+  const params = useParams();
+  const id = Number(params?.id); // Convert id from string to number
+  const post = posts.find((p) => p.id === id);
+
+  if (!post) return <p className="p-10">Post not found</p>;
+
   return (
     <>
-      {posts.map((post, index) => (
-        <div
-          key={post.id}
-          className={`p-5 gap-[10px] md:w-full xl:w-[798px] h-auto bg-white border ${
-            index === 0
-              ? "rounded-t-[12px]"
-              : index === posts.length - 1
-              ? "rounded-b-[12px]"
-              : ""
-          }`}
-        >
-          <div>
-            <div className="flex items-center gap-2 text-[#939494] text-inter">
-              <Avatar>
+      <NavBar />
+      <div className="flex flex-col sm:flex-row w-full max-w-[1440px] mx-auto min-h-screen bg-base-grey-100">
+        <SideBar />
+        <div className="w-[1160px] bg-white px-30 py-14">
+          <Link href={"/"}>
+            <button className="rounded-full bg-main-green-100 w-[44px] h-[44px] flex items-center justify-center text-[#243831]">
+              <FaArrowLeft size={16} />
+            </button>
+          </Link>
+
+          <div className="flex items-center gap-2 text-[#939494] mt-7">
+            <div className="relative w-11 h-11">
+              <Avatar className="w-11 h-11">
                 <AvatarImage src={post.avatarUrl} alt={post.username} />
-                <AvatarFallback>
-                  {post.username.charAt(0).toUpperCase()}
-                </AvatarFallback>
+                <AvatarFallback>{post.username[0]}</AvatarFallback>
               </Avatar>
-              <p>{post.username}</p>
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
             </div>
-            <div>
-              <button className="w-auto h-auto rounded-[16px] mt-3 px-2 py-1 bg-[#F3F3F3]">
-                <p className="text-[12px] text-[#4A4A4A]">{post.category}</p>
-              </button>
-            </div>
-            <div className="mt-1">
-              <div className="text-[16px] font-semibold">{post.title}</div>
-              <div className="text-[12px] leading-[100%] tracking-[0%] line-clamp-2">
-                {post.content}
-              </div>
-            </div>
-            <div className="flex mt-1 items-center gap-1">
-              <svg
-                width="17"
-                height="17"
-                viewBox="0 0 17 17"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M14.2612 8.83301C14.2612 12.1467 11.5749 14.833 8.26123 14.833C7.46313 14.833 6.70143 14.6772 6.00489 14.3943C5.87158 14.3402 5.80493 14.3131 5.75104 14.301C5.69834 14.2892 5.65933 14.2849 5.60532 14.2849C5.5501 14.2849 5.48995 14.2949 5.36966 14.3149L2.99774 14.7103C2.74935 14.7517 2.62516 14.7724 2.53535 14.7338C2.45675 14.7001 2.39412 14.6375 2.3604 14.5589C2.32189 14.4691 2.34258 14.3449 2.38398 14.0965L2.7793 11.7246C2.79935 11.6043 2.80938 11.5441 2.80937 11.4889C2.80936 11.4349 2.80504 11.3959 2.79323 11.3432C2.78115 11.2893 2.75408 11.2227 2.69994 11.0893C2.41705 10.3928 2.26123 9.6311 2.26123 8.83301C2.26123 5.5193 4.94752 2.83301 8.26123 2.83301C11.5749 2.83301 14.2612 5.5193 14.2612 8.83301Z"
-                  stroke="#939494"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <Link href={`/${post.id}`}>
-                <p className="text-[#939494] text-[12px]">
-                  {post.commentCount} comment
-                </p>
-              </Link>
+            <p className="text-black">{post.username}</p>
+          </div>
+
+          <div>
+            <button className="w-auto h-auto rounded-[16px] mt-3 px-2 py-1 bg-[#F3F3F3]">
+              <p className="text-[12px] text-[#4A4A4A]">{post.category}</p>
+            </button>
+          </div>
+
+          <div className="mt-1">
+            <div className="text-[16px] font-semibold">{post.title}</div>
+            <div className="text-[12px] leading-[100%] tracking-[0%]">
+              {post.content}
             </div>
           </div>
+
+          <div className="flex mt-1 items-center gap-1">
+            <svg width="17" height="17" fill="none">
+              <path
+                d="M14.2612 8.83301C14.2612 12.1467 11.5749 14.833 8.26123 14.833C7.46313 14.833 6.70143 14.6772 6.00489 14.3943C5.87158 14.3402 5.80493 14.3131 5.75104 14.301C5.69834 14.2892 5.65933 14.2849 5.60532 14.2849C5.5501 14.2849 5.48995 14.2949 5.36966 14.3149L2.99774 14.7103C2.74935 14.7517 2.62516 14.7724 2.53535 14.7338C2.45675 14.7001 2.39412 14.6375 2.3604 14.5589C2.32189 14.4691 2.34258 14.3449 2.38398 14.0965L2.7793 11.7246C2.79935 11.6043 2.80938 11.5441 2.80937 11.4889C2.80936 11.4349 2.80504 11.3959 2.79323 11.3432C2.78115 11.2893 2.75408 11.2227 2.69994 11.0893C2.41705 10.3928 2.26123 9.6311 2.26123 8.83301C2.26123 5.5193 4.94752 2.83301 8.26123 2.83301C11.5749 2.83301 14.2612 5.5193 14.2612 8.83301Z"
+                stroke="#939494"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <p className="text-[#939494] text-[12px]">
+              {post.commentCount} comment
+            </p>
+          </div>
         </div>
-      ))}
+      </div>
     </>
   );
 }
