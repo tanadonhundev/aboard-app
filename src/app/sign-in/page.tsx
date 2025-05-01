@@ -16,9 +16,7 @@ export default function SignInPage() {
               width={300}
               height={230}
             />
-            <h1 className="text-[28px] text-castoro">
-              <em>a Board</em>
-            </h1>
+            <h1 className="text-[28px] text-castoro">a Board</h1>
           </div>
         </div>
 
@@ -32,7 +30,7 @@ export default function SignInPage() {
                 placeholder="Username"
                 className="bg-white h-11"
               />
-              <Button className="bg-success h-10 text-lg"> Sign In</Button>
+              <Button className="bg-success h-10 text-lg">Sign In</Button>
             </div>
           </div>
         </div>

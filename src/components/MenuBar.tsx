@@ -63,51 +63,57 @@ export default function MenuBar() {
       <div className="flex-1 bg-base-gray-100 p-4 border">
         <div className="flex flex-row items-start md:items-center gap-4 max-w-[798px]">
           {/* Search Input */}
-          <div className="hidden sm:block relative w-full md:w-auto">
+          <div className="hidden md:block relative w-full md:w-auto">
             <input
               type="text"
               placeholder="Search"
-              className="pl-12 pr-4 py-2 w-full md:w-[535px] rounded-md border border-gray-300"
+              className="pl-12 pr-4 py-2 w-full md:w-[335px] xl:w-[535px] rounded-md border border-gray-300"
             />
             <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
-          <div className="flex items-center flex-row gap-2">
-            <div className="sm:block md:hidden w-[200px]">
+
+          <div className="flex items-center justify-between w-full">
+            {/* ซ้าย: ไอคอนค้นหา */}
+            <div className="sm:block md:hidden w-[50px]">
               <FiSearch />
             </div>
-            <details ref={detailsRef} className="relative">
-              <summary className="cursor-pointer text-gray-700 list-none px-2 py-1 rounded">
-                <div className="flex items-center">
-                  <span>Community</span>
-                  <MdKeyboardArrowDown size={20} />
-                </div>
-              </summary>
-              <ul className="absolute right-0 mt-2 w-[202px] md:w-[320px] bg-white border-[#DADADA] border rounded-lg shadow-md z-10">
-                {menuItems.map((item, index) => {
-                  const isFirst = index === 0;
-                  const isLast = index === menuItems.length - 1;
-                  return (
-                    <li
-                      key={item.key}
-                      onClick={() => handleSelect(item.key)}
-                      className={`px-4 py-2 cursor-pointer flex justify-between items-center ${
-                        activeItem === item.key
-                          ? "bg-[#d8e9e4]"
-                          : "hover:bg-[#d8e9e4]"
-                      } ${isFirst ? "rounded-t-lg" : ""} ${
-                        isLast ? "rounded-b-lg" : ""
-                      }`}
-                    >
-                      {item.label}
-                      {activeItem === item.key && <MdCheck />}
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-            <Button className="bg-success rounded-[8px] w-[105px] h-[40px]">
-              Create
-            </Button>
+
+            {/* ขวา: Community + Create */}
+            <div className="flex items-center gap-2">
+              <details ref={detailsRef} className="relative">
+                <summary className="cursor-pointer text-[#191919] list-none px-2 py-1 rounded">
+                  <div className="flex items-center">
+                    <span>Community</span>
+                    <MdKeyboardArrowDown size={20} />
+                  </div>
+                </summary>
+                <ul className="absolute right-0 mt-2 w-[202px] md:w-[320px] bg-white border-[#DADADA] border rounded-lg shadow-md z-10">
+                  {menuItems.map((item, index) => {
+                    const isFirst = index === 0;
+                    const isLast = index === menuItems.length - 1;
+                    return (
+                      <li
+                        key={item.key}
+                        onClick={() => handleSelect(item.key)}
+                        className={`px-4 py-2 cursor-pointer flex justify-between items-center ${
+                          activeItem === item.key
+                            ? "bg-[#d8e9e4]"
+                            : "hover:bg-[#d8e9e4]"
+                        } ${isFirst ? "rounded-t-lg" : ""} ${
+                          isLast ? "rounded-b-lg" : ""
+                        }`}
+                      >
+                        {item.label}
+                        {activeItem === item.key && <MdCheck />}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </details>
+              <Button className="bg-success rounded-[8px] w-[105px] h-[40px] flex items-center gap-x-1">
+                Create +
+              </Button>
+            </div>
           </div>
         </div>
       </div>
