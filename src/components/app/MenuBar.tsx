@@ -97,7 +97,9 @@ export default function MenuBar() {
             </div>
           </div>
         </div>
-        <PostContent />
+        <div className="mt-5">
+          <PostContent />
+        </div>
       </div>
       <div className="hidden lg:block w-[260px] bg-base-grey-100 p-4 gap-2"></div>
     </div>
