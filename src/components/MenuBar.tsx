@@ -4,6 +4,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdCheck, MdKeyboardArrowDown } from "react-icons/md";
 import { RiHome6Line } from "react-icons/ri";
+import { Button } from "./ui/button";
 
 const menuItems = [
   { key: "History", label: "History" },
@@ -15,30 +16,29 @@ const menuItems = [
   { key: "Others", label: "Others" },
 ];
 
-
 export default function MenuBar() {
-      const [activeItem, setActiveItem] = useState<string | null>(null);
-      const detailsRef = useRef<HTMLDetailsElement>(null);
-    
-      const handleSelect = (item: string) => {
-        setActiveItem(item); // ตั้งค่า active item เมื่อมีการเลือก
-      };
-    
-      useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-          if (
-            detailsRef.current &&
-            !detailsRef.current.contains(event.target as Node)
-          ) {
-            detailsRef.current.open = false;
-          }
-        };
-    
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-        };
-      }, []);
+  const [activeItem, setActiveItem] = useState<string | null>(null);
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+
+  const handleSelect = (item: string) => {
+    setActiveItem(item); // ตั้งค่า active item เมื่อมีการเลือก
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        detailsRef.current &&
+        !detailsRef.current.contains(event.target as Node)
+      ) {
+        detailsRef.current.open = false;
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div className="flex flex-col sm:flex-row w-full max-w-[1440px] mx-auto min-h-screen bg-base-grey-100">
       {/* Sidebar */}
@@ -105,7 +105,9 @@ export default function MenuBar() {
                 })}
               </ul>
             </details>
-            <button className="create-button">Create</button>
+            <Button className="bg-success rounded-[8px] w-[105px] h-[40px]">
+              Create
+            </Button>
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 export default function SignInPage() {
@@ -14,26 +16,23 @@ export default function SignInPage() {
               width={300}
               height={230}
             />
-            <h1 className="text-aboard text-2xl font-semibold">a board</h1>
+            <h1 className="text-[28px] text-castoro">
+              <em>a Board</em>
+            </h1>
           </div>
         </div>
 
         {/* ซ้าย - Sign In (จะอยู่ล่างในมือถือ) */}
         <div className="w-full lg:w-1/2 bg-main-green-500 flex items-center justify-center p-37">
           <div className="flex flex-col">
-            <h1 className="text-singin">Sign in</h1>
-            <div className="flex flex-col gap-4 mt-7">
-              <input
-                className="input-username p-3 rounded-md border border-gray-300"
+            <h1 className="text-[28px] text-white text-inter">Sign in</h1>
+            <div className="flex flex-col gap-4 mt-7 w-[384px]">
+              <Input
                 type="text"
                 placeholder="Username"
+                className="bg-white h-11"
               />
-              <button
-                type="submit"
-                className="signin-button bg-white text-main-green-500 font-semibold py-2 rounded-md"
-              >
-                Sign In
-              </button>
+              <Button className="bg-success h-10 text-lg"> Sign In</Button>
             </div>
           </div>
         </div>
