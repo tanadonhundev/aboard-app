@@ -1,10 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { MdCheck, MdKeyboardArrowDown } from "react-icons/md";
-import { RiHome6Line } from "react-icons/ri";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
+import PostContent from "./PostContent";
 
 const menuItems = [
   { key: "History", label: "History" },
@@ -40,34 +39,16 @@ export default function MenuBar() {
     };
   }, []);
   return (
-    <div className="flex flex-col sm:flex-row w-full max-w-[1440px] mx-auto min-h-screen bg-base-grey-100">
-      {/* Sidebar */}
-      <div className="hidden md:block w-[280px] bg-base-grey-100 p-4 gap-2">
-        <div className="flex flex-col gap-2 pt-2 px-2 ">
-          <a
-            href="#"
-            className="text-menu cursor-pointer flex items-center gap-2"
-          >
-            <RiHome6Line size={20} /> <span>Home</span>
-          </a>
-          <a
-            href="#"
-            className="text-menu cursor-pointer flex items-center gap-2"
-          >
-            <FaRegEdit size={20} /> <span>Our Blog</span>
-          </a>
-        </div>
-      </div>
-
+    <div className="flex flex-col sm:flex-row w-full max-w-[1440px] min-h-screen bg-base-grey-100">
       {/* Main content */}
-      <div className="flex-1 bg-base-gray-100 p-4 border">
-        <div className="flex flex-row items-start md:items-center gap-4 max-w-[798px]">
+      <div className="flex-1 flex-col bg-base-gray-100 p-4 border">
+        <div className="flex flex-row justify-between md:items-center gap-4 w-full">
           {/* Search Input */}
-          <div className="hidden md:block relative w-full md:w-auto">
+          <div className="hidden md:block relative">
             <input
               type="text"
               placeholder="Search"
-              className="pl-12 pr-4 py-2 w-full md:w-[335px] xl:w-[535px] rounded-md border border-gray-300"
+              className="pl-12 pr-4 py-2 w-full md:w-[370px] xl:w-[535px] rounded-md border border-gray-300"
             />
             <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           </div>
@@ -116,7 +97,9 @@ export default function MenuBar() {
             </div>
           </div>
         </div>
+        <PostContent />
       </div>
+      <div className="hidden lg:block w-[260px] bg-base-grey-100 p-4 gap-2"></div>
     </div>
   );
 }
