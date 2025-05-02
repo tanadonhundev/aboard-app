@@ -15,7 +15,12 @@ const menuItems = [
   { key: "Others", label: "Others" },
 ];
 
-export default function MenuBar() {
+type Props = {
+  searchTerm: string;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+};
+
+export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -55,6 +60,8 @@ export default function MenuBar() {
           <input
             type="text"
             placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-12 pr-4 py-2 w-full md:w-[460px] xl:w-[535px] rounded-md border border-gray-300"
           />
           <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
