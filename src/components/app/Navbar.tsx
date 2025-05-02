@@ -7,7 +7,7 @@ import { RiHome6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
    const pathname = usePathname();
   

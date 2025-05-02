@@ -4,7 +4,7 @@ import Link from "next/link";
 import { RiHome6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 
-export default function Sidebar() {
+export default function SideBar() {
   const pathname = usePathname();
 
   const isActive = (href: string) => pathname === href;

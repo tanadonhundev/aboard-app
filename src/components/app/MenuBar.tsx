@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { MdCheck, MdKeyboardArrowDown } from "react-icons/md";
 import { Button } from "../ui/button";
-import PostContent from "./PostContent";
 import AddPostForm from "./AddPostForm";
 
 const menuItems = [
@@ -48,7 +47,7 @@ export default function MenuBar() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row w-full max-w-[1440px] min-h-screen bg-base-grey-100">
+    <div>
       {/* Main content */}
       <div className="flex-1 flex-col bg-base-gray-100 p-4">
         <div className="flex flex-row justify-between md:items-center gap-4 w-full">
@@ -110,9 +109,6 @@ export default function MenuBar() {
               </Button>
             </div>
           </div>
-        </div>
-        <div className="mt-5">
-          <PostContent />
         </div>
       </div>
       <div className="hidden lg:block w-[260px] bg-base-grey-100 p-4 gap-2"></div>
