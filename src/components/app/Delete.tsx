@@ -15,20 +15,20 @@ type DeleteProps = {
 const Delete = ({ open, onOpenChange }: DeleteProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[343px] sm:w-[400px] sm:h-[248px] flex flex-col items-center justify-center">
-        <DialogHeader className="w-full text-center">
+      <DialogContent className="w-[343px] sm:w-[400px] sm:h-[248px]">
+        <DialogHeader className="text-center">
           <DialogTitle className="text-center">
             <p>Please confirm if you wish</p>
             <p>to delete the post</p>
           </DialogTitle>
         </DialogHeader>
-        <div className="flex justify-center text-center px-4">
+        <div className="flex flex-col justify-center text-center">
           <p className="text-[#475467]">
             Are you sure you want to delete the post? Once deleted, it cannot be
             recovered.
           </p>
         </div>
-        <DialogFooter className="w-full flex justify-center gap-4">
+        <DialogFooter className="flex justify-center gap-4">
           <Button
             type="submit"
             className="sm:w-[170] bg-red-500 text-white hover:bg-red-700"
