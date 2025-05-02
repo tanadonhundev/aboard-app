@@ -22,8 +22,12 @@ export default function SignInPage() {
 
         {/* ซ้าย - Sign In (จะอยู่ล่างในมือถือ) */}
         <div className="w-full lg:w-1/2 bg-main-green-500 flex items-center justify-center mt-30">
-          <div className="flex flex-col items-center justify-center w-full px-4">
-            <h1 className="text-[28px] text-white text-inter mb-4">Sign in</h1>
+          <div className="flex flex-col items-center justify-center  px-4">
+            <div className="flex justify-start w-full">
+              <h1 className="text-[28px] text-white text-inter mb-4">
+                Sign in
+              </h1>
+            </div>
             <div className="flex flex-col gap-4 w-full max-w-[384px] items-center">
               <Input
                 type="text"
