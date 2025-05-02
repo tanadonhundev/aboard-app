@@ -6,6 +6,7 @@ import EditPostForm from "./EditPostForm";
 import { useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBinLine } from "react-icons/ri";
+import Delete from "./Delete";
 
 const posts = [
   {
@@ -51,18 +52,25 @@ const posts = [
 ];
 
 export default function PostContent() {
-  const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const pathname = usePathname();
+
   const handleEdit = () => {
-    setOpen(true);
+    setOpenEdit(true);
   };
+
+  const handleDelete = () => {
+    setOpenDelete(true);
+  };
+
 
   return (
     <>
       {posts.map((post, index) => (
         <div
           key={post.id}
-          className={`relative p-5 gap-[10px] md:w-full xl:w-[798px] h-auto bg-white border ${
+          className={`relative p-5 gap-[10px] w-auto  md:w-[698px] h-auto bg-white border ${
             index === 0
               ? "rounded-t-[12px]"
               : index === posts.length - 1
@@ -76,7 +84,7 @@ export default function PostContent() {
               <button onClick={handleEdit} className="hover:text-green-500">
                 <AiOutlineEdit size={20} />
               </button>
-              <button className="hover:text-green-500">
+              <button onClick={handleDelete} className="hover:text-green-500">
                 <RiDeleteBinLine size={20} />
               </button>
             </div>
@@ -129,7 +137,8 @@ export default function PostContent() {
           </div>
         </div>
       ))}
-      <EditPostForm open={open} onOpenChange={setOpen} />
+      <EditPostForm open={openEdit} onOpenChange={setOpenEdit} />
+      <Delete open={openDelete} onOpenChange={setOpenDelete} />
     </>
   );
 }

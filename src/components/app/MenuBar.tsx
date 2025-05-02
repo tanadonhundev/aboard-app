@@ -111,7 +111,6 @@ export default function MenuBar() {
           </div>
         </div>
       </div>
-      <div className="hidden lg:block w-[260px] bg-base-grey-100 p-4 gap-2"></div>
       <AddPostForm open={open} onOpenChange={setOpen} />
     </div>
   );
