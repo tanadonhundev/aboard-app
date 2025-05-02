@@ -51,7 +51,7 @@ export default function PostContent() {
       {posts.map((post, index) => (
         <div
           key={post.id}
-          className={`p-5 gap-[10px] md:w-full xl:w-[798px] h-auto bg-white border ${
+          className={`p-5 gap-[10px]  md:w-full xl:w-[798px] h-auto bg-white border ${
             index === 0
               ? "rounded-t-[12px]"
               : index === posts.length - 1

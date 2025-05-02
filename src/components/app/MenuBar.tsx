@@ -41,7 +41,7 @@ export default function MenuBar() {
   return (
     <div className="flex flex-col sm:flex-row w-full max-w-[1440px] min-h-screen bg-base-grey-100">
       {/* Main content */}
-      <div className="flex-1 flex-col bg-base-gray-100 p-4 border">
+      <div className="flex-1 flex-col bg-base-gray-100 p-4">
         <div className="flex flex-row justify-between md:items-center gap-4 w-full">
           {/* Search Input */}
           <div className="hidden md:block relative">
