@@ -7,6 +7,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import AddCommentForm from "@/components/app/AddCommentForm";
 
 const posts = [
   {
@@ -71,9 +74,38 @@ const comments = [
 ];
 
 export default function PostPage() {
+  const [showCommentBox, setShowCommentBox] = useState(false);
+  const [open, setOpen] = useState(false);
+
   const params = useParams();
   const id = Number(params?.id); // Convert id from string to number
   const post = posts.find((p) => p.id === id);
+
+  const handleAddCommentClick = () => {
+    // ตรวจสอบขนาดหน้าจอเมื่อกดปุ่ม
+    if (window.innerWidth <= 640) {
+      setOpen(true); // เปิด AddPostForm เมื่อหน้าจอขนาดเล็กกว่า 640px
+    } else {
+      setShowCommentBox(true); // แสดง textarea แบบปกติเมื่อหน้าจอขนาดใหญ่กว่า 640px
+    }
+  };
+
+  useEffect(() => {
+    // ตรวจสอบขนาดหน้าจอทุกครั้งที่ขนาดหน้าจอเปลี่ยน
+    const handleResize = () => {
+      if (window.innerWidth <= 640) {
+        setOpen(true); // เปิด AddPostForm ทันทีเมื่อขนาดหน้าจอลดลงน้อยกว่า 640px
+      } else {
+        setOpen(false); // ปิด AddPostForm เมื่อขนาดหน้าจอกลับเป็นใหญ่กว่า 640px
+      }
+    };
+
+    // ฟังการเปลี่ยนแปลงขนาดหน้าจอ
+    window.addEventListener("resize", handleResize);
+
+    // ลบ event listener เมื่อ component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (!post) return <p className="p-10">Post not found</p>;
 
@@ -99,7 +131,6 @@ export default function PostPage() {
             <p className="text-black">{post.username}</p>
             <p className="text-[#939494]">5mo.ago</p>
           </div>
-
           <div>
             <button className="w-auto h-auto rounded-[16px] mt-3 px-2 py-1 bg-[#F3F3F3]">
               <p className="text-[12px] text-[#4A4A4A]">{post.category}</p>
@@ -122,12 +153,39 @@ export default function PostPage() {
               {post.commentCount} comment
             </p>
           </div>
-          <Button
-            variant="outline"
-            className="mt-5 border-[#49A569] text-[#49A569] hover:bg-green-50"
-          >
-            Add Comment
-          </Button>
+          <div>
+            {!showCommentBox && (
+              <Button
+                variant="outline"
+                className="mt-5 border-[#49A569] text-[#49A569] hover:bg-green-50"
+                onClick={handleAddCommentClick}
+              >
+                Add Comment
+              </Button>
+            )}
+
+            {showCommentBox && (
+              <>
+                <div className="mt-3 hidden sm:block">
+                  {/* สำหรับหน้าจอ md ขึ้นไป */}
+                  <Textarea
+                    placeholder="What's on your mind..."
+                    className="w-full p-3 border rounded-md resize-none min-h-[100px]"
+                  />
+                  <div className="flex justify-end gap-2 mt-3">
+                    <Button
+                      variant="outline"
+                      className="border-[#49A569] text-[#49A569] hover:bg-green-50"
+                      onClick={() => setShowCommentBox(false)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button className="bg-success text-white">Post</Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
           <div>
             {comments.map((comment) => (
               <div key={comment.id} className="mt-6">
@@ -152,6 +210,15 @@ export default function PostPage() {
           </div>
         </div>
       </div>
+      <AddCommentForm
+        open={open}
+        onOpenChange={(value) => {
+          setOpen(value);
+          if (!value) {
+            setShowCommentBox(false);
+          }
+        }}
+      />
     </>
   );
 }
