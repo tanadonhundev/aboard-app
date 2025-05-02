@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
 
-type AddProductFormProps = {
+type AddCommentFormProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
-const AddCommentForm = ({ open, onOpenChange }: AddProductFormProps) => {
+const AddCommentForm = ({ open, onOpenChange }: AddCommentFormProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
