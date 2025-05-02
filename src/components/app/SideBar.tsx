@@ -10,7 +10,7 @@ export default function Sidebar() {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <div className="hidden md:block w-[280px] bg-base-grey-100 p-4 gap-2">
+    <div className="hidden lg:block w-[280px] bg-base-grey-100 p-4 gap-2">
       <div className="flex flex-col gap-2 pt-2 px-2 text-[#243831]">
         <Link
           href="/"

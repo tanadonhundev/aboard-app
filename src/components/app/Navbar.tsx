@@ -5,9 +5,13 @@ import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { RiHome6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+   const pathname = usePathname();
+  
+    const isActive = (href: string) => pathname === href;
 
   return (
     <div className="w-full bg-main-green-500">
@@ -16,7 +20,7 @@ export default function Navbar() {
         <div className="text-[20px] text-white text-castoro">a Board</div>
 
         {/* Desktop ปุ่ม Sign In */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <Link href="/sign-in">
             <button className="bg-success text-white w-[105px] h-[40px] rounded-md">
               Sign In
@@ -25,7 +29,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="block md:hidden">
+        <div className="block lg:hidden">
           <button onClick={() => setIsOpen(true)}>
             <svg
               className="w-6 h-6 text-white"
@@ -62,16 +66,20 @@ export default function Navbar() {
             </button>
             <div className="mt-5 space-y-3">
               <Link
-                href="#"
-                className="flex items-center space-x-2 text-white hover:text-gray-300"
+                href="/"
+                className={`flex items-center gap-2 ${
+                  isActive("/") ? "font-bold" : ""
+                }`}
               >
                 <RiHome6Line size={20} />
                 <span className="text-inter font-thin">Home</span>
               </Link>
 
               <Link
-                href="#"
-                className="flex items-center space-x-2 text-white hover:text-gray-300"
+                href="/edit-post"
+                className={`flex items-center gap-2 ${
+                  isActive("/edit-post") ? "font-bold" : ""
+                }`}
               >
                 <FaRegEdit size={20} />
                 <span className="text-inter font-thin">Our Blog</span>

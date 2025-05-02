@@ -89,30 +89,29 @@ export default function PostPage() {
       setShowCommentBox(true); // แสดง textarea แบบปกติเมื่อหน้าจอขนาดใหญ่กว่า 640px
     }
   };
-
   useEffect(() => {
-    // ตรวจสอบขนาดหน้าจอทุกครั้งที่ขนาดหน้าจอเปลี่ยน
     const handleResize = () => {
-      if (window.innerWidth <= 640) {
-        setOpen(true); // เปิด AddPostForm ทันทีเมื่อขนาดหน้าจอลดลงน้อยกว่า 640px
+      if (window.innerWidth <= 640 && showCommentBox === true) {
+        setOpen(true);
       } else {
-        setOpen(false); // ปิด AddPostForm เมื่อขนาดหน้าจอกลับเป็นใหญ่กว่า 640px
+        setOpen(false);
       }
     };
 
-    // ฟังการเปลี่ยนแปลงขนาดหน้าจอ
     window.addEventListener("resize", handleResize);
 
-    // ลบ event listener เมื่อ component unmount
+    // เรียกครั้งแรกเพื่อให้สถานะตรงกับขนาดหน้าจอปัจจุบัน
+    handleResize();
+
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [showCommentBox]);
 
   if (!post) return <p className="p-10">Post not found</p>;
 
   return (
     <>
       <NavBar />
-      <div className="flex flex-col sm:flex-row w-full max-w-[1440px] mx-auto min-h-screen bg-base-grey-100">
+      <div className="flex flex-col sm:flex-row w-full max-w-[1440px] mx-auto lg:min-h-screen bg-base-grey-100">
         <SideBar />
         <div className="w-full bg-white px-5 py-8 lg:px-30 lg:py-14">
           <Link href={"/"}>
