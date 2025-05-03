@@ -11,6 +11,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import AddCommentForm from "@/components/app/AddCommentForm";
 import axios from "axios";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
 type dataPost = {
   _id: string;
@@ -25,32 +29,63 @@ type dataPost = {
   updatedAt: string;
 };
 
-const comments = [
-  {
-    id: 1,
-    username: "tanadon",
-    avatarUrl: "https://github.com/shadcn.png",
-    timeAgo: "12h ago",
-    content:
-      "Lorem ipsum dolor sit amet consectetur. Purus cursus vel est a pretium quam imperdiet.",
-  },
-  {
-    id: 2,
-    username: "alice",
-    avatarUrl: "https://github.com/shadcn.png",
-    timeAgo: "5h ago",
-    content:
-      "Tristique auctor sed semper nibh odio iaculis sed aliquet. Amet mollis eget morbi.",
-  },
-];
+type dataComment = {
+  _id: string;
+  comment: string;
+  author: {
+    _id: string;
+    username: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
+const commentSchema = z.object({
+  content: z.string().min(1, { message: "Content ห้ามเว้นว่าง" }).trim(),
+});
+
+type formValues = z.infer<typeof commentSchema>;
 
 export default function PostPage() {
   const [dataPosts, setDataPosts] = useState<dataPost>();
+  const [dataComment, setDataComment] = useState<dataComment[]>([]);
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [open, setOpen] = useState(false);
 
   const params = useParams();
-  const id = params.id; // Convert id from string to number
+  const id = params.id;
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting, errors },
+  } = useForm({
+    resolver: zodResolver(commentSchema),
+  });
+
+  const onSubmit = async (data: formValues) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const formData = {
+        comment: data.content,
+        postId: dataPosts?._id,
+      };
+
+      const res = await axios.post("/api/comment", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        reset();
+      }
+    } catch (error) {
+      console.error("Error posting data:", error);
+    }
+  };
 
   const handleAddCommentClick = () => {
     // ตรวจสอบขนาดหน้าจอเมื่อกดปุ่ม
@@ -79,28 +114,35 @@ export default function PostPage() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        if (token) {
-          const res = await axios.get(`/api/post/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setDataPosts(res.data);
-          console.log(res.data);
-        } else {
-          console.log("No token found");
-        }
+      if (!token) {
+        console.log("No token found");
+        return;
+      }
+
+      try {
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        // Fetch comments and post data in parallel
+        const [commentRes, postRes] = await Promise.all([
+          axios.get(`/api/comment/${id}`, { headers }),
+          axios.get(`/api/post/${id}`, { headers }),
+        ]);
+
+        console.log("Comments:", commentRes.data);
+        console.log("Post Data:", postRes.data);
+        setDataComment(commentRes.data.comments)
+        setDataPosts(postRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -116,7 +158,10 @@ export default function PostPage() {
           <div className="flex items-center gap-2 text-[#939494] mt-7">
             <div className="relative w-11 h-11">
               <Avatar className="w-11 h-11">
-                <AvatarImage src={"https://github.com/shadcn.png"} alt={dataPosts?.author.username} />
+                <AvatarImage
+                  src={"https://github.com/shadcn.png"}
+                  alt={dataPosts?.author.username}
+                />
                 <AvatarFallback>{"post.username[0]"}</AvatarFallback>
               </Avatar>
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
@@ -161,44 +206,55 @@ export default function PostPage() {
 
             {showCommentBox && (
               <>
-                <div className="mt-3 hidden sm:block">
-                  {/* สำหรับหน้าจอ md ขึ้นไป */}
-                  <Textarea
-                    placeholder="What's on your mind..."
-                    className="w-full p-3 border rounded-md resize-none min-h-[100px]"
-                  />
-                  <div className="flex justify-end gap-2 mt-3">
-                    <Button
-                      variant="outline"
-                      className="border-[#49A569] text-[#49A569] hover:bg-green-50"
-                      onClick={() => setShowCommentBox(false)}
-                    >
-                      Cancel
-                    </Button>
-                    <Button className="bg-success text-white">Post</Button>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className="mt-3 hidden sm:block">
+                    {/* สำหรับหน้าจอ md ขึ้นไป */}
+                    <Textarea
+                      placeholder="What's on your mind..."
+                      className="w-full p-3 border rounded-md resize-none min-h-[100px]"
+                      {...register("content")}
+                    />
+                    {errors.content && (
+                      <p className="text-red-500 px-2">
+                        {errors.content.message}
+                      </p>
+                    )}
+                    <div className="flex justify-end gap-2 mt-3">
+                      <Button
+                        variant="outline"
+                        className="border-[#49A569] text-[#49A569] hover:bg-green-50"
+                        onClick={() => setShowCommentBox(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="bg-success text-white"
+                      >
+                        {isSubmitting ? "กำลังPost" : "Post"}
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                </form>
               </>
             )}
           </div>
           <div>
-            {comments.map((comment) => (
-              <div key={comment.id} className="mt-6">
+            {dataComment.map((comment) => (
+              <div key={comment._id} className="mt-6">
                 <div className="flex items-center gap-2">
                   <Avatar className="w-10 h-10">
-                    <AvatarImage
-                      src={comment.avatarUrl}
-                      alt={comment.username}
-                    />
+                    <AvatarImage src={""} alt={comment.author.username} />
                     <AvatarFallback>
-                      {comment.username.slice(0, 2).toUpperCase()}
+                      {comment.author.username.slice(0, 2).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
-                  <p className="text-black">{comment.username}</p>
-                  <p className="text-[#939494]">{comment.timeAgo}</p>
+                  <p className="text-black">{comment.author.username}</p>
+                  <p className="text-[#939494]">{comment.createdAt}</p>
                 </div>
                 <div className="text-[12px] leading-[100%] px-12 mt-3">
-                  {comment.content}
+                  {comment.comment}
                 </div>
               </div>
             ))}

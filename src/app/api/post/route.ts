@@ -3,10 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
-import jwt from "jsonwebtoken";
 import { verifyAuth } from "@/utils/verifyAuth";
-
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: NextRequest) {
   try {
