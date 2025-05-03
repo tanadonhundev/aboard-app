@@ -44,18 +44,24 @@ export default function PostContent({ searchTerm }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const pathname = window.location.pathname;
 
-        if (token) {
-          const res = await axios.get("/api/post", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setDataPosts(res.data);
-        } else {
-          console.log("No token found");
+        const config = {
+          headers: {} as Record<string, string>,
+        };
+
+        if (pathname === "/edit-post") {
+          const token = localStorage.getItem("token");
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+          } else {
+            console.log("No token found");
+            return;
+          }
         }
+
+        const res = await axios.get("/api/post", config);
+        setDataPosts(res.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

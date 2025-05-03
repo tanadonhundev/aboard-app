@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import jwt from "jsonwebtoken";
+import { verifyAuth } from "@/utils/verifyAuth";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -10,15 +12,7 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
-    const authHeader = req.headers.get("authorization");
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = verifyAuth(req);
 
     const userId = (decoded as any).userId;
 
@@ -39,23 +33,27 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "โพสต์สำเร็จ" }, { status: 201 });
   } catch (error) {
-    console.error("POST /api/post error:", error);
+    console.error("Error fetching posts:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     await connectDB();
 
-    const posts = await Post.find().populate("author");
+    let posts;
+
+    try {
+      const decoded: any = verifyAuth(req);
+      posts = await Post.find({ author: decoded.id }).populate("author");
+    } catch (err) {
+      posts = await Post.find().populate("author");
+    }
 
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     console.error("Error fetching posts:", error);
-    return NextResponse.json(
-      { message: "Failed to fetch posts" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
