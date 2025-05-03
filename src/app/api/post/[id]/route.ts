@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Post from "@/models/Post";
-import Comment from "@/models/Comment";
+import Post from "@/lib/models/Post";
+import Comment from "@/lib/models/Comment";
 import { verifyAuth } from "@/utils/verifyAuth";
 
 export async function GET(

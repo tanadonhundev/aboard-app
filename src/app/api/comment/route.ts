@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Comment from "@/models/Comment";
+import Comment from "@/lib/models/Comment";
 import { verifyAuth } from "@/utils/verifyAuth";
 
 export async function POST(req: NextRequest) {

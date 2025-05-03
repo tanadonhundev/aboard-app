@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
-import Post from "@/models/Post";
+import Post from "@/lib/models/Post";
 import { verifyAuth } from "@/utils/verifyAuth";
-import Comment from "@/models/Comment";
+import Comment from "@/lib/models/Comment";
 
 export async function POST(req: NextRequest) {
   try {
