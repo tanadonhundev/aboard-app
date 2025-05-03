@@ -43,15 +43,14 @@ export default function SignInPage() {
   const handleOnSubmit = async (data: z.infer<typeof userSchema>) => {
     try {
       const deviceId = getDeviceId();
-      console.log(deviceId)
-      return
+      console.log(deviceId);
       console.log("Sign In with:", data);
 
       const res = await axios.post("/api/signin", data); // เปลี่ยน endpoint ตามจริง
       console.log(res);
       toast.success("เข้าสู่ระบบสำเร็จ");
       router.replace("/");
-      return;
+
       const { token } = res.data;
 
       // 👉 เก็บ token ไว้ใน localStorage
