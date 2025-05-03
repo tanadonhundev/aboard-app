@@ -1,22 +1,24 @@
-import Post from "@/lib/models/Post";
-import Comment from "@/lib/models/Comment";
 import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
+import Post from "@/lib/models/Post";
+import Comment from "@/lib/models/Comment";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
+
   try {
     await connectDB();
 
-    const post = await Post.findById(params.id).populate("author");
+    const post = await Post.findById(id).populate("author");
 
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
 
-    const comments = await Comment.find({ post: params.id })
+    const comments = await Comment.find({ post: id })
       .populate("author")
       .sort({ createdAt: -1 });
 

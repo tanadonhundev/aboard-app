@@ -7,11 +7,12 @@ import { verifyAuth } from "@/utils/verifyAuth";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await connectDB();
-    const post = await Post.findById(params.id).populate("author");
+    const post = await Post.findById(id).populate("author");
 
     if (!post) {
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
@@ -38,8 +39,9 @@ export async function GET(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await connectDB();
 
@@ -49,16 +51,16 @@ export async function DELETE(
     }
 
     // Find the post before deleting
-    const post = await Post.findById(params.id);
+    const post = await Post.findById(id);
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 });
     }
 
     // Delete all comments related to the post
-    await Comment.deleteMany({ post: params.id });
+    await Comment.deleteMany({ post: id });
 
     // Delete the post
-    await Post.findByIdAndDelete(params.id);
+    await Post.findByIdAndDelete(id);
 
     return NextResponse.json({ message: "ลบโพสต์สำเร็จ" }, { status: 201 });
   } catch (error) {
@@ -68,8 +70,9 @@ export async function DELETE(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     await connectDB();
     const decoded = verifyAuth(req);
@@ -77,7 +80,7 @@ export async function PUT(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
     const data = await req.json();
-    await Post.findByIdAndUpdate(params.id, data, {
+    await Post.findByIdAndUpdate(id, data, {
       new: true,
     });
     return NextResponse.json({ message: "แก้ไขโพสต์สำเร็จ" }, { status: 201 });
