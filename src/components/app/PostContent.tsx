@@ -96,7 +96,7 @@ export default function PostContent({ searchTerm }: Props) {
         return (
           <div
             key={post._id}
-            className={`relative p-5 gap-[10px] w-auto md:w-[698px] h-auto border 
+            className={`relative p-5 gap-[10px] w-auto sm:w-[680px] h-auto border 
           ${isMatched ? "bg-white" : "bg-white"} 
           ${
             index === 0

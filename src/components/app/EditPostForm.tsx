@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 import { MdCheck, MdKeyboardArrowDown } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 type dataPost = {
   _id: string;
@@ -66,22 +67,20 @@ const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("token");
-
       const updatedPost = {
         category: activeItem,
         title: title,
         content: content,
       };
-
       const res = await axios.put(`/api/post/${data._id}`, updatedPost, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      console.log("Post updated:", res.data);
-
-      onOpenChange(false);
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        onOpenChange(false);
+      }
     } catch (error) {
       console.error("Failed to update post:", error);
     }
@@ -135,13 +134,13 @@ const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
             type="text"
             placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)} 
+            onChange={(e) => setTitle(e.target.value)}
           />
           <Textarea
             placeholder="What's on your mind..."
             className="w-full p-3 border rounded-md resize-none min-h-[234px]"
             value={content}
-            onChange={(e) => setContent(e.target.value)} 
+            onChange={(e) => setContent(e.target.value)}
           />
         </div>
         <DialogFooter>
@@ -156,7 +155,7 @@ const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
           <Button
             type="button"
             className="bg-success text-white"
-            onClick={handleSubmit} 
+            onClick={handleSubmit}
           >
             Confirm
           </Button>

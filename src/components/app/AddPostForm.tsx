@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type AddPostFormProps = {
   open: boolean;
@@ -44,6 +45,7 @@ const AddPostForm = ({ open, onOpenChange }: AddPostFormProps) => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const {
     register,
@@ -77,6 +79,10 @@ const AddPostForm = ({ open, onOpenChange }: AddPostFormProps) => {
   const onSubmit = async (data: formValues) => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        return router.replace("/sign-in");
+      }
 
       const foemData = {
         title: data.title,

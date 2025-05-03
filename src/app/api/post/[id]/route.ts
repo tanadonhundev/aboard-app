@@ -46,7 +46,7 @@ export async function DELETE(
 
     // ลบ Post
     await Post.findByIdAndDelete(params.id);
-    return NextResponse.json({ message: "Deleted" });
+    return NextResponse.json({ message: "ลบโพสต์สำเร็จ" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
@@ -62,7 +62,7 @@ export async function PUT(
     const updated = await Post.findByIdAndUpdate(params.id, data, {
       new: true,
     });
-    return NextResponse.json(updated);
+    return NextResponse.json({ message: "แก้ไขโพสต์สำเร็จ" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Update failed" }, { status: 500 });
   }

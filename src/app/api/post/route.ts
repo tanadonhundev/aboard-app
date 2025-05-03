@@ -44,9 +44,11 @@ export async function GET(req: Request) {
 
     try {
       const decoded: any = verifyAuth(req);
-      posts = await Post.find({ author: decoded.userId }).populate("author");
+      posts = await Post.find({ author: decoded.userId })
+        .populate("author")
+        .sort({ createdAt: -1 });
     } catch (err) {
-      posts = await Post.find().populate("author");
+      posts = await Post.find().populate("author").sort({ createdAt: -1 });
     }
 
     // Fetch comment count for each post

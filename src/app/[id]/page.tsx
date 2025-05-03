@@ -4,7 +4,7 @@ import SideBar from "@/components/app/SideBar";
 import NavBar from "@/components/app/Navbar";
 import { FaArrowLeft } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
+import { formatDistanceToNow } from "date-fns";
 type dataPost = {
   _id: string;
   title: string;
@@ -53,6 +54,7 @@ export default function PostPage() {
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const router = useRouter();
   const params = useParams();
   const id = params.id;
 
@@ -68,6 +70,10 @@ export default function PostPage() {
   const onSubmit = async (data: formValues) => {
     try {
       const token = localStorage.getItem("token");
+
+      if (!token) {
+        return router.replace("sign-in");
+      }
 
       const formData = {
         comment: data.content,
@@ -114,31 +120,21 @@ export default function PostPage() {
   }, [showCommentBox]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.log("No token found");
-        return;
-      }
-
-      try {
-        const headers = {
-          Authorization: `Bearer ${token}`,
-        };
-        const [commentRes, postRes] = await Promise.all([
-          axios.get(`/api/comment/${id}`, { headers }),
-          axios.get(`/api/post/${id}`, { headers }),
-        ]);
-        setDataComment(commentRes.data.comments);
-        setDataPosts(postRes.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchData();
-  }, [id]);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const [commentRes, postRes] = await Promise.all([
+        axios.get(`/api/comment/${id}`),
+        axios.get(`/api/post/${id}`),
+      ]);
+      setDataComment(commentRes.data.comments);
+      setDataPosts(postRes.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   return (
     <>
@@ -163,7 +159,13 @@ export default function PostPage() {
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
             </div>
             <p className="text-black">{dataPosts?.author.username}</p>
-            <p className="text-[#939494]">{dataPosts?.createdAt}</p>
+            <p className="text-[#939494]">
+              {dataPosts?.createdAt
+                ? formatDistanceToNow(new Date(dataPosts.createdAt), {
+                    addSuffix: true,
+                  })
+                : "Unknown date"}
+            </p>
           </div>
           <div>
             <button className="w-auto h-auto rounded-[16px] mt-3 px-2 py-1 bg-[#F3F3F3]">
@@ -201,7 +203,6 @@ export default function PostPage() {
                 Add Comment
               </Button>
             )}
-
             {showCommentBox && (
               <>
                 <form onSubmit={handleSubmit(onSubmit)}>
@@ -249,7 +250,13 @@ export default function PostPage() {
                     </AvatarFallback>
                   </Avatar>
                   <p className="text-black">{comment.author.username}</p>
-                  <p className="text-[#939494]">{comment.createdAt}</p>
+                  <p className="text-[#939494]">
+                    {dataPosts?.createdAt
+                      ? formatDistanceToNow(new Date(comment.createdAt), {
+                          addSuffix: true,
+                        })
+                      : "Unknown date"}
+                  </p>
                 </div>
                 <div className="text-[12px] leading-[100%] px-12 mt-3">
                   {comment.comment}
@@ -267,6 +274,7 @@ export default function PostPage() {
             setShowCommentBox(false);
           }
         }}
+        id={dataPosts?._id as string}
       />
     </>
   );

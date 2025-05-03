@@ -16,7 +16,9 @@ export async function GET(
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
 
-    const comments = await Comment.find({ post: params.id }).populate("author");
+    const comments = await Comment.find({ post: params.id })
+      .populate("author")
+      .sort({ createdAt: -1 });
 
     return NextResponse.json({ comments }, { status: 200 });
   } catch (error) {

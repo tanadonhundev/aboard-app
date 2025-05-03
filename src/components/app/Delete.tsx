@@ -7,6 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import axios from "axios";
+import { toast } from "sonner";
 
 type DeleteProps = {
   open: boolean;
@@ -19,12 +20,15 @@ const Delete = ({ open, onOpenChange, id }: DeleteProps) => {
     try {
       const token = localStorage.getItem("token");
 
-      await axios.delete(`/api/post/${id}`, {
+      const res = await axios.delete(`/api/post/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Post deleted successfully");
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        onOpenChange(false);
+      }
     } catch (error) {
       console.error("Delete failed:", error);
     }

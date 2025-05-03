@@ -98,7 +98,7 @@ export default function NavBar() {
             >
               <FaArrowRightLong />
             </button>
-            <div className="mt-5 space-y-3">
+            <div className="mt-5 space-y-3 text-white">
               <Link
                 href="/"
                 className={`flex items-center gap-2 ${
@@ -106,7 +106,7 @@ export default function NavBar() {
                 }`}
               >
                 <RiHome6Line size={20} />
-                <span className="text-inter font-thin">Home</span>
+                <span>Home</span>
               </Link>
 
               <Link
@@ -116,7 +116,7 @@ export default function NavBar() {
                 }`}
               >
                 <FaRegEdit size={20} />
-                <span className="text-inter font-thin">Our Blog</span>
+                <span>Our Blog</span>
               </Link>
             </div>
           </div>

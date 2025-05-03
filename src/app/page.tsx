@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from "react";
 import MenuBar from "@/components/app/MenuBar";
 import SideBar from "@/components/app/SideBar";
