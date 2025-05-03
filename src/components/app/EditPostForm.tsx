@@ -11,10 +11,19 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { MdCheck, MdKeyboardArrowDown } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+
+type dataPost = {
+  _id: string;
+  category: string;
+  title: string;
+  content: string;
+};
 
 type EditPostFormProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  data: dataPost;
 };
 
 const menuItems = [
@@ -27,12 +36,13 @@ const menuItems = [
   { key: "Others", label: "Others" },
 ];
 
-const EditPostForm = ({ open, onOpenChange }: EditPostFormProps) => {
-  const [activeItem, setActiveItem] = useState<string | null>(null);
+const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
+  const [activeItem, setActiveItem] = useState<string | null>(data.category);
+  const [title, setTitle] = useState<string>(data.title);
+  const [content, setContent] = useState<string>(data.content);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -51,6 +61,30 @@ const EditPostForm = ({ open, onOpenChange }: EditPostFormProps) => {
   const handleSelect = (item: string) => {
     setActiveItem(item);
     setIsDropdownOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const updatedPost = {
+        category: activeItem,
+        title: title,
+        content: content,
+      };
+
+      const res = await axios.put(`/api/post/${data._id}`, updatedPost, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("Post updated:", res.data);
+
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to update post:", error);
+    }
   };
 
   return (
@@ -97,27 +131,34 @@ const EditPostForm = ({ open, onOpenChange }: EditPostFormProps) => {
               </ul>
             )}
           </div>
-          <Input type="text" placeholder="Title" />
+          <Input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)} 
+          />
           <Textarea
             placeholder="What's on your mind..."
             className="w-full p-3 border rounded-md resize-none min-h-[234px]"
+            value={content}
+            onChange={(e) => setContent(e.target.value)} 
           />
         </div>
         <DialogFooter>
           <Button
             variant={"outline"}
-            type="submit"
+            type="button"
             className="border-[#49A569] text-[#49A569] hover:bg-green-50"
             onClick={() => onOpenChange(false)}
           >
             Cancel
           </Button>
           <Button
-            type="submit"
+            type="button"
             className="bg-success text-white"
-            onClick={() => onOpenChange(false)}
+            onClick={handleSubmit} 
           >
-            Post
+            Confirm
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -174,6 +174,11 @@ export default function PostContent({ searchTerm }: Props) {
                 </p>
               </Link>
             </div>
+            <EditPostForm
+              open={openEdit}
+              onOpenChange={setOpenEdit}
+              data={post}
+            />
             <Delete
               open={openDelete}
               onOpenChange={setOpenDelete}
@@ -182,7 +187,6 @@ export default function PostContent({ searchTerm }: Props) {
           </div>
         );
       })}
-      <EditPostForm open={openEdit} onOpenChange={setOpenEdit} />
     </>
   );
 }
