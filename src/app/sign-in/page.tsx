@@ -45,8 +45,9 @@ export default function SignInPage() {
       toast.success("เข้าสู่ระบบสำเร็จ");
       router.replace("/");
       const { token } = res.data;
-      // 👉 เก็บ token ไว้ใน localStorage
       localStorage.setItem("token", token);
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("name", res.data.user.username);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error posting data:", error);

@@ -1,17 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { RiHome6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-   const pathname = usePathname();
-  
-    const isActive = (href: string) => pathname === href;
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState("");
+
+  const isActive = (href: string) => pathname === href;
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const name = localStorage.getItem("name");
+    setIsLoggedIn(loggedIn);
+    setUser(name ?? "");
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsLoggedIn(false);
+  };
 
   return (
     <div className="w-full bg-main-green-500">
@@ -19,13 +34,29 @@ export default function NavBar() {
         {/* โลโก้ */}
         <div className="text-[20px] text-white text-castoro">a Board</div>
 
-        {/* Desktop ปุ่ม Sign In */}
+        {/* Desktop ปุ่ม Sign In / Log Out */}
         <div className="hidden lg:block">
-          <Link href="/sign-in">
-            <button className="bg-success text-white w-[105px] h-[40px] rounded-md">
-              Sign In
-            </button>
-          </Link>
+          {isLoggedIn ? (
+            <div className="flex items-center gap-2">
+              <p className="text-white">{user}</p>
+              <Avatar className="w-10 h-10">
+                <AvatarImage src={"https://github.com/shadcn.png"} alt={user} />
+                <AvatarFallback></AvatarFallback>
+              </Avatar>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white w-[105px] h-[40px] rounded-md"
+              >
+                Log Out
+              </button>
+            </div>
+          ) : (
+            <Link href="/sign-in">
+              <button className="bg-success text-white w-[105px] h-[40px] rounded-md">
+                Sign In
+              </button>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Hamburger */}

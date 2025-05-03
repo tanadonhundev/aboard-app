@@ -46,7 +46,7 @@ export async function GET(req: Request) {
 
     try {
       const decoded: any = verifyAuth(req);
-      posts = await Post.find({ author: decoded.id }).populate("author");
+      posts = await Post.find({ author: decoded.userId }).populate("author");
     } catch (err) {
       posts = await Post.find().populate("author");
     }
