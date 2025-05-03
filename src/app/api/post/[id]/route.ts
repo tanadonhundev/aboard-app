@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import jwt from "jsonwebtoken";
+import Comment from "@/models/Comment";
 
 // Your JWT secret (should be stored in .env)
 const JWT_SECRET = process.env.JWT_SECRET!;
@@ -59,7 +60,16 @@ export async function GET(
       return NextResponse.json({ message: "Post not found" }, { status: 404 });
     }
 
-    return NextResponse.json(post);
+    // Count comments for this post
+    const contComment = await Comment.countDocuments({ post: post._id });
+
+    // Convert Mongoose document to plain object and add contComment
+    const postWithCommentCount = {
+      ...post.toObject(),
+      contComment,
+    };
+
+    return NextResponse.json(postWithCommentCount, { status: 200 });
   } catch (error) {
     console.error("Error fetching post:", error);
     return NextResponse.json(

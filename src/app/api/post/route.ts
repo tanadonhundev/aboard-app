@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import { verifyAuth } from "@/utils/verifyAuth";
+import Comment from "@/models/Comment";
 
 export async function POST(req: NextRequest) {
   try {
@@ -48,7 +49,18 @@ export async function GET(req: Request) {
       posts = await Post.find().populate("author");
     }
 
-    return NextResponse.json(posts, { status: 200 });
+    // Fetch comment count for each post
+    const postsWithCommentCount = await Promise.all(
+      posts.map(async (post) => {
+        const count = await Comment.countDocuments({ post: post._id });
+        return {
+          ...post.toObject(),
+          contComment: count,
+        };
+      })
+    );
+
+    return NextResponse.json(postsWithCommentCount, { status: 200 });
   } catch (error) {
     console.error("Error fetching posts:", error);
     return NextResponse.json({ error: "Server error" }, { status: 500 });

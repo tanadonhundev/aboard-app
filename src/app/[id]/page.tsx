@@ -25,6 +25,7 @@ type dataPost = {
     _id: string;
     username: string;
   };
+  contComment: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -125,16 +126,11 @@ export default function PostPage() {
         const headers = {
           Authorization: `Bearer ${token}`,
         };
-
-        // Fetch comments and post data in parallel
         const [commentRes, postRes] = await Promise.all([
           axios.get(`/api/comment/${id}`, { headers }),
           axios.get(`/api/post/${id}`, { headers }),
         ]);
-
-        console.log("Comments:", commentRes.data);
-        console.log("Post Data:", postRes.data);
-        setDataComment(commentRes.data.comments)
+        setDataComment(commentRes.data.comments);
         setDataPosts(postRes.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -191,7 +187,9 @@ export default function PostPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p className="text-[#939494] text-[12px]">48 comment</p>
+            <p className="text-[#939494] text-[12px]">
+              {dataPosts?.contComment} comment
+            </p>
           </div>
           <div>
             {!showCommentBox && (

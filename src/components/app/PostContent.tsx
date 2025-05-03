@@ -22,6 +22,7 @@ type dataPost = {
     _id: string;
     username: string;
   };
+  contComment: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -59,7 +60,6 @@ export default function PostContent({ searchTerm }: Props) {
             return;
           }
         }
-
         const res = await axios.get("/api/post", config);
         setDataPosts(res.data);
       } catch (error) {
@@ -169,7 +169,9 @@ export default function PostContent({ searchTerm }: Props) {
                 />
               </svg>
               <Link href={`/${post._id}`}>
-                <p className="text-[#939494] text-[12px]">{post._id} comment</p>
+                <p className="text-[#939494] text-[12px]">
+                  {post.contComment} comment
+                </p>
               </Link>
             </div>
           </div>
