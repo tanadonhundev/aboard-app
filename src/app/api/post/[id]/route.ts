@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Post from "@/models/Post";
 import Comment from "@/models/Comment";
+import { verifyAuth } from "@/utils/verifyAuth";
 
 export async function GET(
   req: NextRequest,
@@ -41,11 +42,24 @@ export async function DELETE(
 ) {
   try {
     await connectDB();
-    // ลบ Comment ที่เชื่อมโยงกับ Post
+
+    const decoded = verifyAuth(req);
+    if (!decoded) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Find the post before deleting
+    const post = await Post.findById(params.id);
+    if (!post) {
+      return NextResponse.json({ error: "Post not found" }, { status: 404 });
+    }
+
+    // Delete all comments related to the post
     await Comment.deleteMany({ post: params.id });
 
-    // ลบ Post
+    // Delete the post
     await Post.findByIdAndDelete(params.id);
+
     return NextResponse.json({ message: "ลบโพสต์สำเร็จ" }, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
@@ -58,8 +72,12 @@ export async function PUT(
 ) {
   try {
     await connectDB();
+    const decoded = verifyAuth(req);
+    if (!decoded) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
     const data = await req.json();
-    const updated = await Post.findByIdAndUpdate(params.id, data, {
+    await Post.findByIdAndUpdate(params.id, data, {
       new: true,
     });
     return NextResponse.json({ message: "แก้ไขโพสต์สำเร็จ" }, { status: 201 });

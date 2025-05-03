@@ -17,9 +17,8 @@ type DeleteProps = {
 
 const Delete = ({ open, onOpenChange, id }: DeleteProps) => {
   const handleDelete = async (id: string) => {
+    const token = localStorage.getItem("token");
     try {
-      const token = localStorage.getItem("token");
-
       const res = await axios.delete(`/api/post/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
