@@ -7,6 +7,8 @@ const userSchema = new Schema(
       required: true,
       unique: true,
     },
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );

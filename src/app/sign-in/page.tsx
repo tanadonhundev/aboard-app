@@ -16,7 +16,6 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { getDeviceId } from "@/utils/device";
 
 const userSchema = z.object({
   username: z
@@ -42,23 +41,15 @@ export default function SignInPage() {
 
   const handleOnSubmit = async (data: z.infer<typeof userSchema>) => {
     try {
-      const deviceId = getDeviceId();
-      console.log(deviceId);
-      console.log("Sign In with:", data);
-
       const res = await axios.post("/api/signin", data); // เปลี่ยน endpoint ตามจริง
-      console.log(res);
       toast.success("เข้าสู่ระบบสำเร็จ");
       router.replace("/");
-
       const { token } = res.data;
-
       // 👉 เก็บ token ไว้ใน localStorage
       localStorage.setItem("token", token);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error("Login failed:", error);
-      alert(error?.response?.data?.message || "เกิดข้อผิดพลาดในการล็อกอิน");
+      console.error("Error posting data:", error);
     }
   };
   return (
