@@ -51,8 +51,6 @@ export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
     setOpen(true);
   };
 
-  
-
   return (
     <div>
       {/* Main content */}
@@ -118,7 +116,7 @@ export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
           </div>
         </div>
       </div>
-      <AddPostForm open={open} onOpenChange={setOpen}/>
+      <AddPostForm open={open} onOpenChange={setOpen} />
     </div>
   );
 }

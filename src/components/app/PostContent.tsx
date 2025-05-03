@@ -8,10 +8,7 @@ import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Delete from "./Delete";
 import axios from "axios";
-
-type Props = {
-  searchTerm: string;
-};
+import MenuBar from "./MenuBar";
 
 type dataPost = {
   _id: string;
@@ -27,10 +24,11 @@ type dataPost = {
   updatedAt: string;
 };
 
-export default function PostContent({ searchTerm }: Props) {
+export default function PostContent() {
   const [dataPosts, setDataPosts] = useState<dataPost[]>([]);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const pathname = usePathname();
 
@@ -72,6 +70,7 @@ export default function PostContent({ searchTerm }: Props) {
 
   return (
     <>
+      <MenuBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       {dataPosts.map((post, index) => {
         const isMatched = post.title
           .toLowerCase()
