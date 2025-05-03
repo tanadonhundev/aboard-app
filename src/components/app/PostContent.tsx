@@ -3,59 +3,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import EditPostForm from "./EditPostForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineEdit } from "react-icons/ai";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Delete from "./Delete";
-
-const posts = [
-  {
-    id: 1,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "tanadon",
-    category: "History",
-    title: "The Beginning of the End of the World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 32,
-  },
-  {
-    id: 2,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-  {
-    id: 3,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-  {
-    id: 4,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-];
+import axios from "axios";
 
 type Props = {
   searchTerm: string;
 };
 
+type dataPost = {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  author: {
+    _id: string;
+    username: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
 export default function PostContent({ searchTerm }: Props) {
+  const [dataPosts, setDataPosts] = useState<dataPost[]>([]);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
 
@@ -69,9 +41,32 @@ export default function PostContent({ searchTerm }: Props) {
     setOpenDelete(true);
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          const res = await axios.get("/api/post", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setDataPosts(res.data);
+        } else {
+          console.log("No token found");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <>
-      {posts.map((post, index) => {
+      {dataPosts.map((post, index) => {
         const isMatched = post.title
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
@@ -94,13 +89,13 @@ export default function PostContent({ searchTerm }: Props) {
 
         return (
           <div
-            key={post.id}
+            key={post._id}
             className={`relative p-5 gap-[10px] w-auto md:w-[698px] h-auto border 
           ${isMatched ? "bg-white" : "bg-white"} 
           ${
             index === 0
               ? "rounded-t-[12px]"
-              : index === posts.length - 1
+              : index === dataPosts.length - 1
               ? "rounded-b-[12px]"
               : ""
           }`}
@@ -126,12 +121,15 @@ export default function PostContent({ searchTerm }: Props) {
             {/* เนื้อหาโพสต์ */}
             <div className="flex items-center gap-2 text-[#939494] text-inter">
               <Avatar>
-                <AvatarImage src={post.avatarUrl} alt={post.username} />
+                <AvatarImage
+                  src={"https://github.com/shadcn.png"}
+                  alt={"avatar"}
+                />
                 <AvatarFallback>
-                  {post.username.charAt(0).toUpperCase()}
+                  {post.author.username.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
-              <p>{post.username}</p>
+              <p>{post.author.username}</p>
             </div>
 
             <div>
@@ -164,10 +162,8 @@ export default function PostContent({ searchTerm }: Props) {
                   strokeLinejoin="round"
                 />
               </svg>
-              <Link href={`/${post.id}`}>
-                <p className="text-[#939494] text-[12px]">
-                  {post.commentCount} comment
-                </p>
+              <Link href={`/${post._id}`}>
+                <p className="text-[#939494] text-[12px]">{post._id} comment</p>
               </Link>
             </div>
           </div>

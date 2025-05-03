@@ -10,49 +10,20 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
 import AddCommentForm from "@/components/app/AddCommentForm";
+import axios from "axios";
 
-const posts = [
-  {
-    id: 1,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "tanadon",
-    category: "History",
-    title: "The Beginning of the End of the World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 32,
-  },
-  {
-    id: 2,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-  {
-    id: 3,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-  {
-    id: 4,
-    avatarUrl: "https://github.com/shadcn.png",
-    username: "alice",
-    category: "Philosophy",
-    title: "Existence and Meaning in a Digital World",
-    content:
-      "The afterlife sitcom The Good Place comes to its culmination, the show’s two protagonists, Eleanor and Chidi, contemplate their future. Having lived thousands upon thousands of lifetimes together, and having experienced virtually everything this life has to offer, they are weary. It is time for it all to end. The show’s solution to this perpetual happiness-cum-weariness is extinction. When you have had enough, when you are utterly sated by love and joy and pleasure, you can walk through a passage to nothingness. And Chidi has had enough.",
-    commentCount: 18,
-  },
-];
+type dataPost = {
+  _id: string;
+  title: string;
+  content: string;
+  category: string;
+  author: {
+    _id: string;
+    username: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
 
 const comments = [
   {
@@ -74,12 +45,12 @@ const comments = [
 ];
 
 export default function PostPage() {
+  const [dataPosts, setDataPosts] = useState<dataPost>();
   const [showCommentBox, setShowCommentBox] = useState(false);
   const [open, setOpen] = useState(false);
 
   const params = useParams();
-  const id = Number(params?.id); // Convert id from string to number
-  const post = posts.find((p) => p.id === id);
+  const id = params.id; // Convert id from string to number
 
   const handleAddCommentClick = () => {
     // ตรวจสอบขนาดหน้าจอเมื่อกดปุ่ม
@@ -106,7 +77,30 @@ export default function PostPage() {
     return () => window.removeEventListener("resize", handleResize);
   }, [showCommentBox]);
 
-  if (!post) return <p className="p-10">Post not found</p>;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        if (token) {
+          const res = await axios.get(`/api/post/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setDataPosts(res.data);
+          console.log(res.data);
+        } else {
+          console.log("No token found");
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -122,22 +116,26 @@ export default function PostPage() {
           <div className="flex items-center gap-2 text-[#939494] mt-7">
             <div className="relative w-11 h-11">
               <Avatar className="w-11 h-11">
-                <AvatarImage src={post.avatarUrl} alt={post.username} />
-                <AvatarFallback>{post.username[0]}</AvatarFallback>
+                <AvatarImage src={"https://github.com/shadcn.png"} alt={dataPosts?.author.username} />
+                <AvatarFallback>{"post.username[0]"}</AvatarFallback>
               </Avatar>
               <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full" />
             </div>
-            <p className="text-black">{post.username}</p>
-            <p className="text-[#939494]">5mo.ago</p>
+            <p className="text-black">{dataPosts?.author.username}</p>
+            <p className="text-[#939494]">{dataPosts?.createdAt}</p>
           </div>
           <div>
             <button className="w-auto h-auto rounded-[16px] mt-3 px-2 py-1 bg-[#F3F3F3]">
-              <p className="text-[12px] text-[#4A4A4A]">{post.category}</p>
+              <p className="text-[12px] text-[#4A4A4A]">
+                {dataPosts?.category}
+              </p>
             </button>
           </div>
           <div className="mt-1">
-            <div className="text-[16px] font-semibold">{post.title}</div>
-            <div className="text-[12px] leading-[100%]">{post.content}</div>
+            <div className="text-[16px] font-semibold">{dataPosts?.title}</div>
+            <div className="text-[12px] leading-[100%]">
+              {dataPosts?.content}
+            </div>
           </div>
           <div className="flex mt-5 items-center gap-1">
             <svg width="17" height="17" fill="none">
@@ -148,9 +146,7 @@ export default function PostPage() {
                 strokeLinejoin="round"
               />
             </svg>
-            <p className="text-[#939494] text-[12px]">
-              {post.commentCount} comment
-            </p>
+            <p className="text-[#939494] text-[12px]">48 comment</p>
           </div>
           <div>
             {!showCommentBox && (
