@@ -6,13 +6,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axios from "axios";
 
 type DeleteProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  id: string;
 };
 
-const Delete = ({ open, onOpenChange }: DeleteProps) => {
+const Delete = ({ open, onOpenChange, id }: DeleteProps) => {
+  const handleDelete = async (id: string) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      await axios.delete(`/api/post/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Post deleted successfully");
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
+  };
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[343px] sm:w-[400px] sm:h-[248px]">
@@ -32,7 +48,10 @@ const Delete = ({ open, onOpenChange }: DeleteProps) => {
           <Button
             type="submit"
             className="sm:w-[170] bg-red-500 text-white hover:bg-red-700"
-            onClick={() => onOpenChange(false)}
+            onClick={() => {
+              handleDelete(id);
+              onOpenChange(false);
+            }}
           >
             Delete
           </Button>

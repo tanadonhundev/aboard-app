@@ -5,7 +5,7 @@ import Link from "next/link";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { RiHome6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export default function NavBar() {
@@ -13,6 +13,8 @@ export default function NavBar() {
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState("");
+
+  const router = useRouter();
 
   const isActive = (href: string) => pathname === href;
 
@@ -26,6 +28,7 @@ export default function NavBar() {
   const handleLogout = () => {
     localStorage.clear();
     setIsLoggedIn(false);
+    router.replace("/");
   };
 
   return (
