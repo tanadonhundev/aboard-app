@@ -24,19 +24,30 @@ type dataPost = {
   updatedAt: string;
 };
 
+type dataEditPost = {
+  _id: string;
+  category: string;
+  title: string;
+  content: string;
+};
+
 export default function PostContent() {
   const [dataPosts, setDataPosts] = useState<dataPost[]>([]);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [editPostData, setEditPostData] = useState<dataEditPost | null>(null);
+  const [postId, setPostId] = useState<string | undefined>(undefined);
 
   const pathname = usePathname();
 
-  const handleEdit = () => {
+  const handleEdit = (post: dataPost) => {
+    setEditPostData(post);
     setOpenEdit(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (_id: string) => {
+    setPostId(_id);
     setOpenDelete(true);
   };
 
@@ -109,13 +120,13 @@ export default function PostContent() {
             {pathname === "/edit-post" && (
               <div className="absolute top-5 right-5 flex gap-4 text-[#2B5F44]">
                 <button
-                  onClick={() => handleEdit()}
+                  onClick={() => handleEdit(post)}
                   className="hover:text-green-500"
                 >
                   <AiOutlineEdit size={20} />
                 </button>
                 <button
-                  onClick={() => handleDelete()}
+                  onClick={() => handleDelete(post._id)}
                   className="hover:text-green-500"
                 >
                   <RiDeleteBinLine size={20} />
@@ -173,19 +184,19 @@ export default function PostContent() {
                 </p>
               </Link>
             </div>
-            <EditPostForm
-              open={openEdit}
-              onOpenChange={setOpenEdit}
-              data={post}
-            />
-            <Delete
-              open={openDelete}
-              onOpenChange={setOpenDelete}
-              id={post._id}
-            />
           </div>
         );
       })}
+      <EditPostForm
+        open={openEdit}
+        onOpenChange={setOpenEdit}
+        data={editPostData as dataEditPost}
+      />
+      <Delete
+        open={openDelete}
+        onOpenChange={setOpenDelete}
+        id={postId as string}
+      />
     </>
   );
 }

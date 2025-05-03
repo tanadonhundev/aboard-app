@@ -38,9 +38,11 @@ const menuItems = [
 ];
 
 const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
-  const [activeItem, setActiveItem] = useState<string | null>(data.category);
-  const [title, setTitle] = useState<string>(data.title);
-  const [content, setContent] = useState<string>(data.content);
+  const [activeItem, setActiveItem] = useState<string | null>(
+    data?.category ?? null
+  );
+  const [title, setTitle] = useState<string>(data?.title ?? null);
+  const [content, setContent] = useState<string>(data?.content ?? null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
