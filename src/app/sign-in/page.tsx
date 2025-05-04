@@ -55,7 +55,7 @@ export default function SignInPage() {
   };
   return (
     <div className="flex justify-center min-h-screen bg-main-green-500 w-full">
-      <div className="flex flex-col lg:flex-row-reverse w-full max-w-[1440px]">
+      <div className="flex flex-col lg:flex-row-reverse w-full">
         {/* ขวา - Banner (จะอยู่บนในมือถือ) */}
         <div className="w-full lg:w-1/2 bg-main-green-500 flex items-center justify-center">
           <div className="w-full h-full bg-main-green-300 flex flex-col items-center justify-center text-white rounded-b-[36px] lg:rounded-tl-[36px] lg:rounded-br-none p-18">

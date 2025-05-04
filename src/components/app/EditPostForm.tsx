@@ -38,11 +38,12 @@ const menuItems = [
 ];
 
 const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
+  console.log(data);
   const [activeItem, setActiveItem] = useState<string | null>(
     data?.category ?? null
   );
-  const [title, setTitle] = useState<string>(data?.title ?? null);
-  const [content, setContent] = useState<string>(data?.content ?? null);
+  const [title, setTitle] = useState<string>(data?.title ?? "");
+  const [content, setContent] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -87,6 +88,14 @@ const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
       console.error("Failed to update post:", error);
     }
   };
+
+  useEffect(() => {
+    if (data && open) {
+      setTitle(data.title ?? "");
+      setContent(data.content ?? "");
+      setActiveItem(data.category ?? null);
+    }
+  }, [data, open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

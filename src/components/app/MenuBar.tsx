@@ -56,7 +56,7 @@ export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
       {/* Main content */}
       <div className="py-3 flex flex-row justify-between md:items-center gap-4 w-full">
         {/* Search Input */}
-        <div className="hidden md:block relative">
+        <div className="relative">
           <input
             type="text"
             placeholder="Search"
@@ -68,11 +68,6 @@ export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
         </div>
 
         <div className="flex items-center justify-between w-full">
-          {/* ซ้าย: ไอคอนค้นหา */}
-          <div className="sm:block md:hidden w-[50px]">
-            <FiSearch />
-          </div>
-
           {/* ขวา: Community + Create */}
           <div className="flex items-center gap-2">
             <div ref={dropdownRef} className="relative">
