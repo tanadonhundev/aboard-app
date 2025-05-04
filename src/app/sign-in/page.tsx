@@ -90,7 +90,7 @@ export default function SignInPage() {
                           <Input
                             {...field}
                             type="text"
-                            placeholder="๊sername"
+                            placeholder="Username"
                             className="bg-white h-11 text-lg w-[343px] sm:w-[300px] md:w-[350px] lg:w-[384px]"
                           />
                         </FormControl>
