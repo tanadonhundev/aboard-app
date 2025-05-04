@@ -97,6 +97,7 @@ export default function PostContent() {
       ) : (
         dataPosts
           .filter((post) => {
+            if (!category || category === "") return true;
             return post.category === category;
           })
           .map((post, index) => {
