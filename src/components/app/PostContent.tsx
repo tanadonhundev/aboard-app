@@ -86,7 +86,11 @@ export default function PostContent() {
 
   return (
     <>
-      <MenuBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <MenuBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        refreshData={fetchData}
+      />
 
       {isLoading ? (
         <div className="text-center text-gray-500 py-10">Loading...</div>

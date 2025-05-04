@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 type AddPostFormProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  refreshData: () => void;
 };
 
 const postSchema = z.object({
@@ -41,7 +42,7 @@ const menuItems = [
   { key: "Others", label: "Others" },
 ];
 
-const AddPostForm = ({ open, onOpenChange }: AddPostFormProps) => {
+const AddPostForm = ({ open, onOpenChange, refreshData }: AddPostFormProps) => {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -100,6 +101,7 @@ const AddPostForm = ({ open, onOpenChange }: AddPostFormProps) => {
         setActiveItem("");
         reset();
         onOpenChange(false);
+        refreshData();
       }
     } catch (error) {
       console.error("Error posting data:", error);

@@ -18,9 +18,14 @@ const menuItems = [
 type Props = {
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  refreshData: () => void;
 };
 
-export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
+export default function MenuBar({
+  searchTerm,
+  setSearchTerm,
+  refreshData,
+}: Props) {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -111,7 +116,11 @@ export default function MenuBar({ searchTerm, setSearchTerm }: Props) {
           </div>
         </div>
       </div>
-      <AddPostForm open={open} onOpenChange={setOpen} />
+      <AddPostForm
+        open={open}
+        onOpenChange={setOpen}
+        refreshData={refreshData}
+      />
     </div>
   );
 }
