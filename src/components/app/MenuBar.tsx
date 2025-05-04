@@ -19,12 +19,14 @@ type Props = {
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   refreshData: () => void;
+  setCategory: (category: string | null) => void;
 };
 
 export default function MenuBar({
   searchTerm,
   setSearchTerm,
   refreshData,
+  setCategory,
 }: Props) {
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
@@ -50,6 +52,7 @@ export default function MenuBar({
   const handleSelect = (item: string) => {
     setActiveItem(item);
     setIsDropdownOpen(false);
+    setCategory(item);
   };
 
   const handleAdd = () => {
