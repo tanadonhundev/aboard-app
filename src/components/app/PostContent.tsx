@@ -70,9 +70,8 @@ export default function PostContent() {
           return;
         }
       }
-
       const res = await axios.get("/api/post", config);
-      setDataPosts(res.data); // ตั้งค่า dataPosts ที่ได้รับจาก API
+      setDataPosts(res.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
