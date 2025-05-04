@@ -18,6 +18,7 @@ type AddCommentFormProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   id: string;
+  refreshData: () => void;
 };
 
 const commentSchema = z.object({
@@ -26,7 +27,12 @@ const commentSchema = z.object({
 
 type formValues = z.infer<typeof commentSchema>;
 
-const AddCommentForm = ({ open, onOpenChange, id }: AddCommentFormProps) => {
+const AddCommentForm = ({
+  open,
+  onOpenChange,
+  id,
+  refreshData,
+}: AddCommentFormProps) => {
   const router = useRouter();
 
   const {
@@ -59,6 +65,7 @@ const AddCommentForm = ({ open, onOpenChange, id }: AddCommentFormProps) => {
       if (res.status === 201) {
         toast.success(res.data.message);
         reset();
+        refreshData();
       }
     } catch (error) {
       console.error("Error posting data:", error);

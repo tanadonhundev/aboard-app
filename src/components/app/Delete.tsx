@@ -13,9 +13,10 @@ type DeleteProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   id: string;
+  refreshData: () => void;
 };
 
-const Delete = ({ open, onOpenChange, id }: DeleteProps) => {
+const Delete = ({ open, onOpenChange, id, refreshData }: DeleteProps) => {
   const handleDelete = async (id: string) => {
     const token = localStorage.getItem("token");
     try {
@@ -27,6 +28,7 @@ const Delete = ({ open, onOpenChange, id }: DeleteProps) => {
       if (res.status === 201) {
         toast.success(res.data.message);
         onOpenChange(false);
+        refreshData?.();
       }
     } catch (error) {
       console.error("Delete failed:", error);

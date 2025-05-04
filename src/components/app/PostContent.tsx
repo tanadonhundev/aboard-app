@@ -52,34 +52,35 @@ export default function PostContent() {
     setOpenDelete(true);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const pathname = window.location.pathname;
+  const fetchData = async () => {
+    try {
+      const pathname = window.location.pathname;
 
-        const config = {
-          headers: {} as Record<string, string>,
-        };
+      const config = {
+        headers: {} as Record<string, string>,
+      };
 
-        if (pathname === "/edit-post") {
-          const token = localStorage.getItem("token");
-          if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-          } else {
-            console.log("No token found");
-            setIsLoading(false);
-            return;
-          }
+      if (pathname === "/edit-post") {
+        const token = localStorage.getItem("token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        } else {
+          console.log("No token found");
+          setIsLoading(false);
+          return;
         }
-        const res = await axios.get("/api/post", config);
-        setDataPosts(res.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
       }
-    };
 
+      const res = await axios.get("/api/post", config);
+      setDataPosts(res.data); // ตั้งค่า dataPosts ที่ได้รับจาก API
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -200,11 +201,13 @@ export default function PostContent() {
         open={openEdit}
         onOpenChange={setOpenEdit}
         data={editPostData as dataEditPost}
+        refreshData={fetchData}
       />
       <Delete
         open={openDelete}
         onOpenChange={setOpenDelete}
         id={postId as string}
+        refreshData={fetchData}
       />
     </>
   );

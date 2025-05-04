@@ -25,6 +25,7 @@ type EditPostFormProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   data: dataPost;
+  refreshData: () => void;
 };
 
 const menuItems = [
@@ -37,7 +38,12 @@ const menuItems = [
   { key: "Others", label: "Others" },
 ];
 
-const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
+const EditPostForm = ({
+  open,
+  onOpenChange,
+  data,
+  refreshData,
+}: EditPostFormProps) => {
   console.log(data);
   const [activeItem, setActiveItem] = useState<string | null>(
     data?.category ?? null
@@ -83,6 +89,7 @@ const EditPostForm = ({ open, onOpenChange, data }: EditPostFormProps) => {
       if (res.status === 201) {
         toast.success(res.data.message);
         onOpenChange(false);
+        refreshData?.();
       }
     } catch (error) {
       console.error("Failed to update post:", error);
