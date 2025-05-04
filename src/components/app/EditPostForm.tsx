@@ -44,7 +44,6 @@ const EditPostForm = ({
   data,
   refreshData,
 }: EditPostFormProps) => {
-  console.log(data);
   const [activeItem, setActiveItem] = useState<string | null>(
     data?.category ?? null
   );
